@@ -1,19 +1,59 @@
 import requests
 from bs4 import BeautifulSoup
+import smtplib
+import time
 
-URL = "https://www.amazon.de/Raspberry-Pi-ARM-Cortex-A72-Bluetooth-Micro-HDMI/dp/B07TC2BK1X/ref=sr_1_3?crid=2GVGZ9BWADXZ8&dchild=1&keywords=raspberry%2Bpi&qid=1590001020&sprefix=rasberry%2Bpi%2Caps%2C239&sr=8-3&th=1"
+
+URL = "https://www.ebay.ca/itm/BenQ-GW2480-24-Full-HD-1920-x-1080-60Hz-5ms-VGA-HDMI-DisplayPort-Flicker-Free-T/182839053967?hash=item2a920e8e8f:g:FVAAAOSwk9pdDKXb"
 
 headers = {
     "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36 Edg/81.0.416.77"}
 
-page = requests.get(URL, headers=headers)
-
-soup = BeautifulSoup(page.content, "html.parser")
-
-title = soup.find(id="productTitle").get_text()
-#price = soup.find(id="priceblock_ourprice").get_text()
-#converted_price = price[0:5]
+password = 'PASSWORD HERE'
 
 
-print("\n", title, "\n")
-#print(price.strip(), "\n")
+def checkPrice():
+    page = requests.get(URL, headers=headers)
+
+    soup = BeautifulSoup(page.content, "html.parser")
+
+    title = soup.find(id="itemTitle").get_text()
+    price = soup.find(id="prcIsum").get_text()
+    converted_price = float(price[3:9])
+
+    print(title.strip())
+    print(converted_price, "\n")
+
+    if converted_price < 150.00:
+        sendMail()
+
+
+def sendMail():
+    server = smtplib.SMTP("smtp.gmail.com", 587)
+    server.ehlo()
+    server.starttls()
+    server.ehlo()
+
+    server.login('yifan.ding.official@gmail.com', password)
+
+    subject = 'Price Fell Down'
+    body = 'Check the ebay link:' + URL
+
+    msg = f"Subject: {subject}\n\n{body}"
+
+    server.sendmail(
+        'yifan.ding.official@gmail.com',
+        'yifan.ding@berkeley.edu',
+        msg
+    )
+    print('HEY THE EMAIL HAS BEEN SENT')
+
+    server.quit()
+
+
+while(True):
+    checkPrice()
+    time.sleep(60*60*24)
+
+
+checkPrice()

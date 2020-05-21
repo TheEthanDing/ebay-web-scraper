@@ -1,12 +1,20 @@
-# amazon-web-scraper
-python web scraper that will send an email to me once the price of a certain product on amazon falls below a certain amount
+# ebay-monitor-web-scraper
+python web scraper that will send an email to me once the price of a BenQ 24" IPS FullHD computer monitor on ebay falls below a $160,00 price range
 
-Build using the tutorial listed below 
+built using the tutorial listed below 
 https://www.youtube.com/watch?v=Bg9r_yLk7VY
 
+### Use Instructions
+
+Run the following command in the command line in the folder once downloaded
 ```
 pip3 install requests bs4
 ```
 
-Needed to use the .de German version of amazon, because the American version prevents webscraping. Seems rather odd that Amazon doesn't have consistent policy on preventing webscraping. 
+Replace the password and email section with your own email, and run the script in terminal with...
 
+```
+python3 scraper.py
+```
+
+I might be stupid for putting my email on the internet but at least I rememebred to take down my password.
